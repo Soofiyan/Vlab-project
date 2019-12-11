@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8" />
+    <title>Html file first</title>
+    <font size = "15"></font>
+    <font face = "Comic sans MS"></font>
+    </head>
+    <body>
+      <style>
+        div  {
+          position: absolute;
+          left:0px;
+          top:0px;
+        }
+        </style>
+
+      <div class="container">
+          <img src = "dialogue_box.png" style="z-index:101;position:absolute;left:230px;top:160px;display:none" id="dialogue"/>
+      </div>
+    <canvas id = "canvas" width="1000" height = "700"></canvas>
+    <input type="text" onkeyup="TextBoxHandler('t1','t2')" id="t1" style="z-index:101;position:absolute;width:31px;height:35px;left:238px;top:325px;font-size:25px;border:solid;display:none" />
+    <input type="text" onkeyup="TextBoxHandler('t2','t3')" id="t2" style="z-index:101;position:absolute;width:31px;height:35px;left:278px;top:325px;font-size:25px;border:solid;display:none" />
+    <input type="text" onkeyup="TextBoxHandler('t3','t4')" id="t3" style="z-index:101;position:absolute;width:31px;height:35px;left:318px;top:325px;font-size:25px;border:solid;display:none" />
+    <div id="f1q1" style="z-index:101;position:absolute;left:320px;top:200px;display:none">In modulo-11 arithmetic ,we use only the <br> inetergers in the range ______,inclusive</div>
+    <div id="f1p1" style="z-index:101;position:absolute;left:360px;top:455px;display:none">0 and 1 <br><br><br> 1 and 0</div>
+    <div id="f1q2" style="z-index:101;position:absolute;left:320px;top:200px;display:none">Find the even and odd parity for the <br> following bit sequence : 10100110.</div>
+    <div id="f1q3" style="z-index:101;position:absolute;left:320px;top:200px;display:none">Find the even and odd parity for the <br> following bit sequence : 10100110.</div>
+    <input type="text" onkeyup="TextBoxHandler('t4','t1')" id="t4" style="z-index:101;position:absolute;width:31px;height:35px;left:358px;top:325px;font-size:25px;border:solid;display:none" />
+    <img src = "computer.png" style="z-index:101;position:absolute;left:28px;top:35px;display" id="computer"/>
+    <img src = "computer.png" style="z-index:101;position:absolute;left:670px;top:35px" id="computer1"/>
+    <div id="demo1" onmousedown = "option(event)" onmousemove="option_color(event)" style="position:absolute;border:solid;top:20px;color:red;width:1200px;height:1000px"></div>
+    <script>
+    var canvas = document.getElementById("canvas");
+    var c = canvas.getContext("2d");
+    var i = 0;
+    var check_move = 1;
+    var screen_check = 0;
+    var option_selected = 0;
+    main();
+    function main()
+    {
+      if(screen_check == 0)
+      {
+        first_screen();
+      }
+    }
+    function mouseOver() {
+
+    }
+    function mouseOut() {
+
+    }
+    function first_screen()
+    {
+        static();
+        images_dialogue_open();
+        first_question();
+        option();
+        option_color();
+    }
+    function static()
+    {
+      document.getElementById("computer").style.display = "block";
+      document.getElementById("computer1").style.display = "block";
+      c.beginPath();
+      c.moveTo(116,203);
+      c.lineTo(116,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.stroke();
+      c.beginPath();
+      c.moveTo(762,203);
+      c.lineTo(762,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.moveTo(116,700);
+      c.lineTo(762,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.stroke();
+      c.beginPath();
+      c.arc(116,253,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(116,383,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(762,253,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(762,383,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      //animate_ball(203,116);
+    }
+    function TextBoxHandler(id,nextId)
+    {
+      var check_input_data = 0;
+      var e = document.getElementById(id);
+      if(e.value > 1)
+      {
+        e.value = 0;
+        alert("Please enter valid binary number");
+        check_input_data = 1;
+      }
+        if(e.value == 1 || e.value == 0)
+        {
+          document.getElementById(nextId).focus();
+        }
+    }
+    function images_dialogue_open()
+    {
+      document.getElementById("dialogue").style.display = "block";
+    }
+    function images_dialogue_close()
+    {
+      document.getElementById("dialogue").style.display = "none";
+    }
+    function input_data_student(event)
+    {
+      hide_text_box();
+      var first = parseInt(document.getElementById('t1').value);
+      var second = parseInt(document.getElementById('t2').value);
+      var third = parseInt(document.getElementById('t3').value);
+      var fourth = parseInt(document.getElementById('t4').value);
+    }
+    function hide_text_box()
+    {
+      document.getElementById("t1").style.display = "none";
+      document.getElementById("t2").style.display = "none";
+      document.getElementById("t3").style.display = "none";
+      document.getElementById("t4").style.display = "none";
+    }
+    function first_question()
+    {
+      document.getElementById("f1q1").style.display = "block";
+      document.getElementById("f1p11").style.display = "block";
+      document.getElementById("f1p12").style.display = "block";
+      //document.getElementById("f1q2").style.display = "block";
+      //document.getElementById("f1q3").style.display = "block";
+    }
+    function clear_option()
+    {
+      if(option_selected == 1)
+      {
+        c.beginPath();
+        c.arc(320,400,7,0,2*Math.PI,true);
+        c.fillStyle = "white";
+        c.strokeStyle = "white";
+        c.lineWidth = "1"
+        c.fill();
+        c.stroke();
+      }
+      else if(option_selected == 2)
+      {
+        c.beginPath();
+        c.arc(440,400,5,0,2*Math.PI,true);
+        c.fillStyle = "white";
+        c.strokeStyle = "white";
+        c.lineWidth = "1"
+        c.fill();
+        c.stroke();
+      }
+      else if(option_selected == 3)
+      {
+        c.beginPath();
+        c.arc(320,455,5,0,2*Math.PI,true);
+        c.fillStyle = "white";
+        c.strokeStyle = "white";
+        c.lineWidth = "1"
+        c.fill();
+        c.stroke();
+      }
+      else if(option_selected == 4)
+      {
+        c.beginPath();
+        c.arc(440,455,5,0,2*Math.PI,true);
+        c.fillStyle = "white";
+        c.strokeStyle = "white";
+        c.lineWidth = "1"
+        c.fill();
+        c.stroke();
+      }
+    }
+    function option(event)
+    {
+      c.beginPath();
+      c.arc(320,400,8,0,2*Math.PI,true);
+      c.strokeStyle = "black";
+      c.lineWidth = "1"
+      c.stroke();
+      c.beginPath();
+      c.arc(440,400,8,0,2*Math.PI,true);
+      c.strokeStyle = "black";
+      c.lineWidth = "1"
+      c.stroke();
+      c.beginPath();
+      c.arc(320,455,8,0,2*Math.PI,true);
+      c.strokeStyle = "black";
+      c.lineWidth = "1"
+      c.stroke();
+      c.beginPath();
+      c.arc(440,455,8,0,2*Math.PI,true);
+      c.strokeStyle = "black";
+      c.lineWidth = "1"
+      c.stroke();
+      var x = event.clientX;
+      var y = event.clientY;
+      var cor = "X-cords" + x + "Y-cords" + y ;
+      if(x>=320 && x<=340 && y>=450 && y<=470)
+      {
+        clear_option();
+        option_selected = 1;
+        c.beginPath();
+        c.arc(320,400,5,0,2*Math.PI,true);
+        c.fillStyle = "blue";
+        c.fill();
+        c.strokeStyle = "blue";
+        c.lineWidth = "1"
+        c.stroke();
+      }
+      else if(x>=440 && x<=450 && y>=450 && y<=470)
+      {
+        clear_option();
+        option_selected = 2;
+        c.beginPath();
+        c.arc(440,400,5,0,2*Math.PI,true);
+        c.fillStyle = "blue";
+        c.fill();
+        c.strokeStyle = "blue";
+        c.lineWidth = "1"
+        c.stroke();
+      }
+      else if(x>=320 && x<=340 && y>=510 && y<=530)
+      {
+        clear_option();
+        option_selected = 3;
+        c.beginPath();
+        c.arc(320,455,5,0,2*Math.PI,true);
+        c.fillStyle = "blue";
+        c.fill();
+        c.strokeStyle = "blue";
+        c.lineWidth = "1"
+        c.stroke();
+      }
+      else if(x>=440 && x<=450 && y>=510 && y<=530)
+      {
+        clear_option();
+        option_selected = 4;
+        c.beginPath();
+        c.arc(440,455,5,0,2*Math.PI,true);
+        c.fillStyle = "blue";
+        c.fill();
+        c.strokeStyle = "blue";
+        c.lineWidth = "1"
+        c.stroke();
+      }
+      document.getElementById("demo1").innerHTML = cor;
+    }
+    function animate_ball(move,move1)
+    {
+        console.log(move1,move,check_move);
+        c.beginPath();
+        c.arc(move1,move,5,0,2*Math.PI,true);
+        c.fill();ÓÓÓÓÓÓ
+        c.strokeStyle = "black";
+        c.fillStyle = "green";
+        c.fill();
+        if(check_move == 4 || check_move == 5)
+        {
+          move1 += 5;
+        }else if(check_move == 6||check_move == 7||check_move == 8){
+          move -= 5;
+        }
+        else {
+          move += 5;
+        }
+        setTimeout(function (){
+          if(move <= 253 && check_move==1){
+            animate_ball(move,move1);
+            images_dialogue_open();
+            if(move >= 253)
+            {
+              check_move = 2;
+            }
+          }
+          else if(move <= 383 && check_move==2){
+            animate_ball(move,move1);
+            if(move >= 383)
+            {
+              check_move=3;
+            }
+          }
+          else if(move <= 698 && check_move==3){
+            animate_ball(move,move1);
+            if(move >= 698)
+            {
+              check_move=4;
+            }
+          }
+          else if(move1 <= 446 && check_move==4){
+            animate_ball(move,move1);
+            if(move1 >= 446)
+            {
+              check_move=5;
+            }
+          }
+          else if(move1 <= 756 && check_move==5){
+            animate_ball(move,move1);
+            if(move1 >= 756){
+            check_move = 6;
+          }
+        }
+        else if(move >= 383 && check_move==6){
+            animate_ball(move,move1);
+            //check_move = 7;
+            if(move <= 383){
+            check_move = 7;
+          }
+        }
+        else if(move >= 253 && check_move==7){
+              animate_ball(move,move1);
+              if(move <= 253){
+              check_move = 8;
+            }
+            }
+        else if(move >= 203 && check_move==8){
+              animate_ball(move,move1);
+              if(move <= 203){
+              images_dialogue_close();
+              first_question();
+            }
+            }
+        },10);
+      //}
+    }
+    </script>
+  </body>
+  </html>

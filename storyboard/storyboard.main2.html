@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Html file first</title>
+    <font size = "15"></font>
+    <font face = "Comic sans MS"></font>
+    <style>
+    input {
+    position: absolute;
+    left: 200px;
+    top: 350px;
+    }
+    h1 {
+      position: absolute;
+      left:100px;
+      top:100px;
+    }
+    div  {
+      position: absolute;
+      left:0px;
+      top:0px;
+    }
+    </style>
+    </head>
+    <body>
+    <canvas id = "canvas" width="1000" height = "800"></canvas>
+    <input type="button" id="button1" value="click for cat images" onclick="a()"/>
+    <input type="button" id="button2" value="click for birds images" style="left: 440px;" onclick="a()"/>
+    <img src = "a.jpg" style = "display:none" id="cat"/>
+    <img src = "b.jpg" style = "display:none" id="birds"/>
+    <div id="bottonm-left"  onmousemove="tp(event)" style="position:absolute left:500px;top:400px">Bottom Left</div>
+    <!--<div id="demo1" onmousemove="tp(event)" style="border:solid;width:900px;height:850px"></div>-->
+    <div id="demo" onmousedown="tp(event)" style="border:solid;width:150px;height:160px;top:100px;left:50px"></div>
+    <script>
+    var canvas = document.getElementById("canvas");
+    var c = canvas.getContext("2d");
+    var i = 0;
+    function mouseOver() {
+
+    }
+    function mouseOut() {
+
+    }
+    function tp(event)
+    {
+      var canvas = document.getElementById("canvas");
+      var c = canvas.getContext("2d");
+      c.beginPath();
+      c.rect(20, 20, 150, 100);
+      c.fillStyle = "red";
+      c.border = "black";
+      c.stroke();
+      var x = event.clientX;
+      var y = event.clientY;
+      var cor = "X-cords" + x + "Y-cords" + y ;
+      document.getElementById("botton-left").style.width = y+"px";
+      document.getElementById("bottom-left").style.height = x+"px";
+    }
+    </script>
+    <script src = "mouseevent.ob.js"></script>
+  </body>
+  </html>

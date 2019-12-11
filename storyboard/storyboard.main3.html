@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8" />
+    <title>Html file first</title>
+    <font size = "15"></font>
+    <font face = "Comic sans MS"></font>
+    <style>
+    h1 {
+      position: absolute;
+      left:100px;
+      top:100px;
+    }
+    div  {
+      position: absolute;
+      left:0px;
+      top:0px;
+    }
+    </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="text-block">
+          <img src = "dialogue_box.png" style="z-index:101;position:absolute;left:230px;top:160px" id="dialogue"/>
+        </div>
+      </div>
+    <canvas id = "canvas" width="1000" height = "800"></canvas>
+    <input type="text" onkeyup="TextBoxHandler('t1','t2')" id="t1" style="z-index:101;position:absolute;width:31px;height:35px;left:238px;top:325px;font-size:25px;border:solid;display:none" />
+    <input type="text" onkeyup="TextBoxHandler('t2','t3')" id="t2" style="z-index:101;position:absolute;width:31px;height:35px;left:278px;top:325px;font-size:25px;border:solid;display:none" />
+    <input type="text" onkeyup="TextBoxHandler('t3','t4')" id="t3" style="z-index:101;position:absolute;width:31px;height:35px;left:318px;top:325px;font-size:25px;border:solid;display:none" />
+    <div id="botton-left" style="z-index:101;position:absolute;left:350px;top:200px;display:block">Bottom Left</div>
+    <input type="text" onkeyup="TextBoxHandler('t4','t1')" id="t4" style="z-index:101;position:absolute;width:31px;height:35px;left:358px;top:325px;font-size:25px;border:solid;display:none" />
+    <img src = "computer.png" style="z-index:101;position:absolute;left:28px;top:90px;display" id="computer"/>
+    <img src = "computer.png" style="z-index:101;position:absolute;left:670px;top:90px" id="computer1"/>
+    <!--<div id="demo1" onmousemove="input_data_student(event)" style="border:solid;color:red;width:900px;height:850px"></div>-->
+    <script>
+    var canvas = document.getElementById("canvas");
+    var c = canvas.getContext("2d");
+    main();
+    var i = 0;
+    var check_move=1;
+    function mouseOver() {
+
+    }
+    function mouseOut() {
+
+    }
+    function main()
+    {
+      document.getElementById("computer").style.display = "block";
+      document.getElementById("computer1").style.display = "block";
+      c.beginPath();
+      c.moveTo(116,203);
+      c.lineTo(116,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.stroke();
+      c.beginPath();
+      c.moveTo(762,203);
+      c.lineTo(762,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.moveTo(116,700);
+      c.lineTo(762,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.stroke();
+      c.beginPath();
+      c.arc(116,253,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(116,383,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(762,253,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(762,383,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      animate_ball(203,116);
+    }
+    function TextBoxHandler(id,nextId)
+    {
+      var check_input_data = 0;
+      var e = document.getElementById(id);
+      if(e.value > 1)
+      {
+        e.value = 0;
+        alert("Please enter valid binary number");
+        check_input_data = 1;
+      }
+        if(e.value == 1 || e.value == 0)
+        {
+          document.getElementById(nextId).focus();
+        }
+    }
+    function images_dialogue_open()
+    {
+      document.getElementById("dialogue").style.display = "block";
+    }
+    function images_dialogue_close()
+    {
+      document.getElementById("dialogue").style.display = "none";
+    }
+    function input_data_student(event)
+    {
+      var x = event.clientX;
+      var y = event.clientY;
+      var cor = "X-cords" + x + "Y-cords" + y ;
+      document.getElementById("demo1").innerHTML = cor;
+      hide_text_box();
+      var first = parseInt(document.getElementById('t1').value);
+      var second = parseInt(document.getElementById('t2').value);
+      var third = parseInt(document.getElementById('t3').value);
+      var fourth = parseInt(document.getElementById('t4').value);
+    }
+    function hide_text_box()
+    {
+      document.getElementById("t1").style.display = "none";
+      document.getElementById("t2").style.display = "none";
+      document.getElementById("t3").style.display = "none";
+      document.getElementById("t4").style.display = "none";
+    }
+    function first_question()
+    {
+      document.getElementById("botton-left").style.display = "none";
+    }
+    function animate_ball(move,move1)
+    {
+        console.log(move1,move,check_move);
+        c.beginPath();
+        c.arc(move1,move,5,0,2*Math.PI,true);
+        c.fill();
+        c.strokeStyle = "black";
+        c.fillStyle = "green";
+        c.fill();
+        if(check_move == 4 || check_move == 5)
+        {
+          move1 += 5;
+        }else if(check_move == 6||check_move == 7||check_move == 8){
+          move -= 5;
+        }
+        else {
+          move += 5;
+        }
+        setTimeout(function (){
+          if(move <= 253 && check_move==1){
+            animate_ball(move,move1);
+            images_dialogue_open();
+            if(move >= 253)
+            {
+              check_move = 2;
+            }
+          }
+          else if(move <= 383 && check_move==2){
+            animate_ball(move,move1);
+            if(move >= 383)
+            {
+              check_move=3;
+            }
+          }
+          else if(move <= 698 && check_move==3){
+            animate_ball(move,move1);
+            if(move >= 698)
+            {
+              check_move=4;
+            }
+          }
+          else if(move1 <= 446 && check_move==4){
+            animate_ball(move,move1);
+            if(move1 >= 446)
+            {
+              check_move=5;
+            }
+          }
+          else if(move1 <= 756 && check_move==5){
+            animate_ball(move,move1);
+            if(move1 >= 756){
+            check_move = 6;
+          }
+        }
+        else if(move >= 383 && check_move==6){
+            animate_ball(move,move1);
+            //check_move = 7;
+            if(move <= 383){
+            check_move = 7;
+          }
+        }else if(move >= 223 && check_move==7){
+              animate_ball(move,move1);
+              //check_move = 7;
+              if(move <= 223){
+              check_move = 8;
+              images_dialogue_close();
+              first_question();
+            }
+            }
+        },20);
+      //}
+    }
+    </script>
+  </body>
+  </html>

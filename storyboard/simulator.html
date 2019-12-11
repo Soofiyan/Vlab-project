@@ -1,0 +1,487 @@
+<html>
+<div style="height:95vh;width:95vh;border:solid;margin-left:0px;position:fixed;top:0;left:0;">
+  <!--Maintain 1:1 aspect ratio -->
+
+<div id="ParentContainer" style="background-color:cyan;width:100%;height:100%;font-size:100%;">
+  <canvas id="leftCanvas" style="width:10%;height:60%;top: 30%;left:10%;float:left;position:relative;" width="10%" height="60%"></canvas>
+  <canvas id="rightCanvas" style="width:10%;height:60%;top: 30%;right:10%;float:right;position:relative;" width="10%" height="60%"></canvas>
+  <canvas id="bottomCanvas"style="width:60%;height:10%;top: 80%;left:10%;float:left;position:relative;" width="60%" height="10%"></canvas>
+  <img src="computer.png" style="height:25%;width: 25%;position:relative;left:-7%;top:-5%;float:left;">
+  <img src="computer.png" style="height:25%;width: 25%;position:relative;left:7%;top:-5%;float:right;">
+  <div  id="MainTray" style="position:relative;top:5%;left:27%;height:75%;width:45%;">
+    <div id="QuestionContainer" style="width:100%;height:39%;border-top-left-radius:24px;border-top-right-radius:24px;border:solid;border-color:#000000;border-bottom:none;align:left;"></div>
+    <div id="OptionContainer" style="width:100%;height:55%;border-color:#000000;border:solid;border-bottom:none;border-top:none;"></div>
+    <div id="NavigationContainer" style="width:100%;height:5%;border-bottom-left-radius:24px;border-bottom-right-radius:24px;border-color:#000000;border:solid;border-top:none;"></div>
+  </div>
+</div>
+
+</div>
+<script>
+lc = document.getElementById("leftCanvas");
+rc = document.getElementById("rightCanvas");
+bc = document.getElementById("bottomCanvas");
+lC = lc.getContext("2d");
+rC = rc.getContext("2d");
+bC = bc.getContext("2d");
+var SetState = 0;
+var PreSetState = 0;
+var unitH = parseInt(lc.width)/100;
+var unitV = parseInt(lc.height)/100;
+//console.log(parseInt(45*unitH));
+var filledX;
+var filledY;
+var question = document.getElementById("QuestionContainer");
+var option = document.getElementById("OptionContainer");
+var navigation =document.getElementById("NavigationContainer");
+var correct;
+var GlobalCounter = 0;
+var StoreOriginalBits = [];
+var StoreErroredBits = [];
+//var NumberOfErrors = [];
+var ParityPosition = [0,0,0,0,0,0,0];
+function q1(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'><b>Assessment:</b><br>1. In modulo-11 arithmetic, we use only the integers in the range ______, inclusive.</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:1%;'><input onClick='verify(\"a\",1)' type='radio' name='opt' value='a'>1 to 10<br><input onClick='verify(\"b\",1)' type='radio' name='opt' value='b'>0 to 10<br><input onClick='verify(\"c\",1)' type='radio' name='opt' value='c'>1 to 11<br><input onClick='verify(\"d\",1)' type='radio' name='opt' value='d'>none of the above</span>";
+correct = 'a';
+navigation.innerHTML = "";
+}
+
+function q2(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'><b>Assessment:</b><br>2. In modulo-2 arithmetic we use only:</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:1%;'><input onClick='verify(\"a\",2)' type='radio' name='opt' value='a'>1 and 2<br><input onClick='verify(\"b\",2)' type='radio' name='opt' value='b'> 0 and 1<br><input onClick='verify(\"c\",2)' type='radio' name='opt' value='c'>0 only<br><input onClick='verify(\"d\",2)' type='radio' name='opt' value='d'>1 only</span>";
+correct = 'b';
+navigation.innerHTML = "";
+}
+
+function q3(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'><b>Assessment:</b><br>3. Find the even and odd parity for the following bit sequence : 10100110.</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:1%;'><input onClick='verify(\"a\",3)' type='radio' name='opt' value='a'> 0 and 0<br><input onClick='verify(\"b\",3)' type='radio' name='opt' value='b'>  0 and 1<br><input onClick='verify(\"c\",3)' type='radio' name='opt' value='c'> 1 and 0<br><input onClick='verify(\"d\",3)' type='radio' name='opt' value='d'>1 and 1</span>";
+correct = 'b';
+navigation.innerHTML = "";
+}
+function q4(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'><b>Assessment:</b><br>4. At what locations are parity bits located in a hamming codeword? (n belongs to integers).</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:1%;'><input onClick='verify(\"a\",4)' type='radio' name='opt' value='a'>2<sup>n</sup> th positions<br><input onClick='verify(\"b\",4)' type='radio' name='opt' value='b'>  2<sup>n</sup> -1 th positions<br><input onClick='verify(\"c\",4)' type='radio' name='opt' value='c'> 2<sup>n-1</sup> th positions<br><input onClick='verify(\"d\",4)' type='radio' name='opt' value='d'>none of the above</span>";
+correct = 'a';
+navigation.innerHTML = "";
+}
+function q5(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'>Enter a four-bit data to be sent.(Set "+(GlobalCounter+1) +")</span>";
+option.innerHTML = `
+<span style='position:absolute;top:30%;left:30%;'><div id = "buttonHolder" style="border:solid;border-color:#0000ff;border-width:0px;width:138px;height:45px;">
+<input type="text" onkeyup="TextBoxHandler('t1','t2')" onfocus="clearData('t1')" id="t1" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:0px;border:solid"/><!--left:238px;top:325px;-->
+<input type="text" onkeyup="TextBoxHandler('t2','t3')" onfocus="clearData('t2')" id="t2" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:34px;border:solid"/>
+<input type="text" onkeyup="TextBoxHandler('t3','t4')" onfocus="clearData('t3')" id="t3" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:68px;border:solid"/>
+<input type="text" onkeyup="TextBoxHandler('t4','stop')" onfocus="clearData('t4')" id="t4" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:102px;border:solid"/>
+</div></span>
+`;
+correct = '';
+navigation.innerHTML = "";
+}
+function q6(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'>Enter the minimum number of redundant bits to be added:</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:1%;'><input id='q6inp' type='number' value='0'><br> <input type='button' onClick='verify(document.getElementById(\"q6inp\").value,6)' value='Submit'></span>";
+correct = '3';
+navigation.innerHTML = "";
+}
+var click_count  = 0;
+function q7(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'>Select the positions for Even parity redundant bits:</span>";
+option.innerHTML = `<span style='position:absolute;top:30%;left:2%;'><table style="border:solid;">
+<tr><th>Select the bits for parity</th><td><input type='button' value='_' onClick='if(this.value == "P"){ this.value = "_";ParityPosition[0] = 0;click_count--;}else{this.value = "P";ParityPosition[0] = 1;click_count++;}'></td><td><input type='button' value='_' onClick='if(this.value == "P"){ this.value = "_";ParityPosition[1] = 0;click_count--;}else{this.value = "P";ParityPosition[1] = 1;}click_count++;'></td>
+<td><input type='button' value='_' onClick='if(this.value == "P"){ this.value = "_";ParityPosition[2] = 0;click_count--;}else{this.value = "P";ParityPosition[2] = 1;click_count++}'></td>
+<td><input type='button' value='_' onClick='if(this.value == "P"){ this.value = "_";ParityPosition[3] = 0;click_count--;}else{this.value = "P";ParityPosition[3] = 1;click_count++}'></td>
+<td><input type='button' value='_' onClick='if(this.value == "P"){ this.value = "_";ParityPosition[4] = 0;click_count--;}else{this.value = "P";ParityPosition[4] = 1;click_count++}'></td>
+<td><input type='button' value='_' onClick='if(this.value == "P"){ this.value = "_";ParityPosition[5] = 0;click_count--;}else{this.value = "P";ParityPosition[5] = 1;click_count++}'></td>
+<td><input type='button' value='_' onClick='if(this.value == "P"){ this.value = "_";ParityPosition[6] = 0;click_count--;}else{this.value = "P";ParityPosition[6] = 1;click_count++}'></td>
+</tr>
+<tr><th>Bit position</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td></tr> </table></span>
+<br>
+<br>
+<input type='button' onClick='if(click_count == 3){verify(ParityPosition.toString(),7)}else{navigation.innerHTML = "You need exactly 3 parity bits."}' value='Submit'>
+`;
+correct = [1,1,0,1,0,0,0].toString();
+navigation.innerHTML = "";
+}
+function q8(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'>Select the positions for Even parity redundant bits:</span>";
+var k = obtainTemplate();
+//console.log(k);
+
+//console.log(temp);
+option.innerHTML = `<span style='position:absolute;top:30%;left:3%;'><table style="border:solid;width:90%;">
+<tr style="border:solid;"><th style="border:solid;"> <sub>Set #</sub>\\<sup>Bit position</sup></th><th style="border:solid;">0</th><th style="border:solid;">1</th><th style="border:solid;">2</th> <th style="border:solid;">3 </th>
+<th style="border:solid;">4</th><th style="border:solid;">5</th><th style="border:solid;">6</th></tr>`+k+`
+</table></span>
+<br>
+<br><br><br><br><br><br><br>
+<input type='button' style="bottom:10px" onClick='verify(obtainParityVal(),8)' value='Submit'>
+`;
+correct = obtainCorrect();
+navigation.innerHTML = "";
+}
+function q9(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'> The received codeword "+StoreErroredBits[GlobalCounter][0]+StoreErroredBits[GlobalCounter][1]+StoreErroredBits[GlobalCounter][2]+StoreErroredBits[GlobalCounter][3]+StoreErroredBits[GlobalCounter][4]+StoreErroredBits[GlobalCounter][5]+StoreErroredBits[GlobalCounter][6]+" Contains:</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:1%;'><input onClick='verify(\"0\",9)' type='radio' name='opt' value='0'>No Error<br><input onClick='verify(\"1\",9)' type='radio' name='opt' value='1'> 1-bit Error<br><input onClick='verify(\"2\",9)' type='radio' name='opt' value='2'>error of more than 2-bits.";
+correct = CalculateError(GlobalCounter);
+navigation.innerHTML = "";
+}
+function q10(){
+  if(GlobalCounter<4){
+if(CalculateError(GlobalCounter) == 0){
+
+  GlobalCounter += 1;
+  q10();
+}else{
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'> The received codeword "+StoreErroredBits[GlobalCounter][0]+StoreErroredBits[GlobalCounter][1]+StoreErroredBits[GlobalCounter][2]+StoreErroredBits[GlobalCounter][3]+StoreErroredBits[GlobalCounter][4]+StoreErroredBits[GlobalCounter][5]+StoreErroredBits[GlobalCounter][6]+" when corrected is:</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:1%;'><input onClick='verify(\"1\",10)' type='radio' name='opt' value='1'><input type='text' id='correctgetter' value=''><br><input onClick='verify(\"2\",10)' type='radio' name='opt' value='1'> Can not be corrected.";
+correct = CalculateError(GlobalCounter);
+navigation.innerHTML = "";
+}
+}else{
+  SetState = 6;
+}
+
+}
+function Samapt(){
+question.innerHTML = "<span style='position:absolute;top:4%;left:1%;'>Enter the minimum hamming distance between<br>1000<br>1011<br>0010:</span>";
+option.innerHTML = "<span style='position:absolute;top:30%;left:3%;'><input id='q11inp' type='number' value='0'><br> <input type='button' onClick='verify(document.getElementById(\"q11inp\").value,11)' value='Submit'></span>";
+correct = '2';
+navigation.innerHTML = "";
+}
+function verify(ans,que){
+  console.log(ans,correct);
+if(ans == correct){
+  navigation.innerHTML = "<span style='color:#00ff00;font-size:80%;'>CORRECT ANSWER</span>";
+  if(que == 1){
+    setTimeout(q2,1000);
+  }else if(que == 2){
+    question.innerHTML = "";
+    option.innerHTML = "";
+    navigation.innerHTML = "";
+    SetState = 1;
+
+  }else if(que == 3){
+    setTimeout(q4,1000);
+  }else if(que == 4){
+    question.innerHTML = "";
+    option.innerHTML = "";
+    navigation.innerHTML = "";
+    SetState = 2;
+  }else if(que == 5){
+    var buttons = [];
+    buttons.push("t1");buttons.push("t2");buttons.push("t3");buttons.push("t4");
+    for(var j = 0;j< 4;j++){
+      buttons[j] = document.getElementById(buttons[j]);
+    }
+    var count = 0;
+    for(var i = 0;i<4;i++){
+
+      if(parseInt(buttons[i].value) == 0||parseInt(buttons[i].value) == 1){
+        count++;
+      }else{
+        count--;
+      }
+    }
+      if(count == 4){
+        StoreOriginalBits.push([parseInt(buttons[0].value),parseInt(buttons[1].value),parseInt(buttons[2].value),parseInt(buttons[3].value)]);
+        console.log(StoreOriginalBits);
+        GlobalCounter = GlobalCounter + 1;
+        if(GlobalCounter == 4){
+          setTimeout(q3,1000);
+        }else{
+          setTimeout(q5,1000);
+        }
+        navigation.innerHTML = "<span style='color:#00ff00;font-size:80%;'>TIME TO ADD PARITY BITS</span>";
+      }else{
+        navigation.innerHTML = "<span style='color:#ff0000;font-size:80%;'>BITS NOT ENTERED PROPERLY!</span>";
+      }
+}else if(que == 6){
+  setTimeout(q7,1000);
+}else if(que == 7){
+  setTimeout(q8,1000);
+}else if(que == 8){
+  //setTimeout(q9,1000);
+  SetState = 3;
+}
+else if(que == 9){
+  //setTimeout(q9,1000);
+  GlobalCounter = GlobalCounter + 1;
+  if(GlobalCounter == 4){
+    //setTimeout(q10,1000);
+    SetState = 5;
+  }else{
+    setTimeout(q9,1000);
+  }
+
+
+}else if (que == 10) {
+  console.log(document.getElementById("correctgetter").value,""+StoreOriginalBits[GlobalCounter][0]+StoreOriginalBits[GlobalCounter][1]+StoreOriginalBits[GlobalCounter][2]+StoreOriginalBits[GlobalCounter][3]+StoreOriginalBits[GlobalCounter][4]+StoreOriginalBits[GlobalCounter][5]+StoreOriginalBits[GlobalCounter][6]);
+  if(document.getElementById("correctgetter").value == ""+StoreOriginalBits[GlobalCounter][0]+StoreOriginalBits[GlobalCounter][1]+StoreOriginalBits[GlobalCounter][2]+StoreOriginalBits[GlobalCounter][3]+StoreOriginalBits[GlobalCounter][4]+StoreOriginalBits[GlobalCounter][5]+StoreOriginalBits[GlobalCounter][6]){
+  GlobalCounter = GlobalCounter + 1;
+  if(GlobalCounter >= 4){
+    //setTimeout(q10,1000);
+    SetState = 6;
+  }else{
+    setTimeout(q10,1000);
+  }
+}else{
+  if(ans == 2){
+    if(GlobalCounter >= 4){
+      //setTimeout(q10,1000);
+      SetState = 6;
+    }else{
+      setTimeout(q10,1000);
+    }
+  }else{
+    navigation.innerHTML = "<span style='color:#ff0000;font-size:80%;'>WRONG ANSWER</span>";
+  }
+  }
+}else if(que == 11){
+  question.innerHTML = "<span style='color:#ff0000;font-size:80%;'>COMPLETE!</span>";
+  option.innerHTML = "";
+  navigation.innerHTML = "";
+}
+}else{
+  navigation.innerHTML = "<span style='color:#ff0000;font-size:80%;'>WRONG ANSWER</span>";
+}
+
+}
+function DrawCircle(c,x,y,r,fill,border){
+  c.beginPath();
+  c.arc(x,y,r,0,2*Math.PI,true);
+  c.strokeStyle = border;
+  c.fillStyle = fill;
+  c.fill();
+  c.stroke();
+  c.beginPath();
+}
+function addCheckPoints(){
+lC.fillStyle = "#ff0000";
+lC.fillRect(parseInt(45*unitH),0*unitV,parseInt(20*unitH),parseInt(90*unitV));
+lC.fillRect(parseInt(45*unitH),parseInt(90*unitV),parseInt(60*unitH),parseInt(20*unitH));
+DrawCircle(lC,parseInt(50*unitH),parseInt(30*unitV),parseInt(20*unitH),"#000000","#ff0000");
+DrawCircle(lC,parseInt(50*unitH),parseInt(70*unitV),parseInt(20*unitH),"#000000","#ff0000");
+rC.fillStyle = "#ff0000";
+rC.fillRect(parseInt(45*unitH),0*unitV,parseInt(20*unitH),parseInt(90*unitV));
+rC.fillRect(parseInt(0*unitH),parseInt(90*unitV),parseInt(60*unitH),parseInt(20*unitH));
+DrawCircle(rC,parseInt(50*unitH),parseInt(30*unitV),parseInt(20*unitH),"#000000","#ff0000");
+DrawCircle(rC,parseInt(50*unitH),parseInt(70*unitV),parseInt(20*unitH),"#000000","#ff0000");
+filledX = parseInt(0*unitH);
+filledY = parseInt(0*unitV);
+}
+function TrackProgress(){
+  if(SetState > PreSetState){
+    if(SetState == 1){
+      if(filledY < parseInt(30*unitV)){
+        lC.fillStyle = "#00ff00";
+        filledY = filledY + 1;
+        lC.fillRect(parseInt(45*unitH),0*unitV,parseInt(20*unitH),filledY);
+      }else{
+        DrawCircle(lC,parseInt(50*unitH),parseInt(30*unitV),parseInt(20*unitH),"#00ff00","#00ff00");
+        PreSetState = SetState;
+        //filledY = parseInt(30*unitV)+parseInt(20*unitH);
+        q5();
+        filledY = 0;
+      }
+    }else if (SetState == 2) {
+      if(filledY < parseInt(40*unitV)){
+        lC.fillStyle = "#00ff00";
+        filledY = filledY + 0.25;
+        //console.log(filledY,parseInt(70*unitV));
+        lC.fillRect(parseInt(45*unitH),parseInt(30*unitV)+parseInt(20*unitH),parseInt(20*unitH),filledY);
+      }else{
+        DrawCircle(lC,parseInt(50*unitH),parseInt(70*unitV),parseInt(20*unitH),"#00ff00","#00ff00");
+        PreSetState = SetState;
+        filledY = 0;
+        q6();
+
+      }
+    }else if(SetState == 3) {
+      //console.log(filledX,filledY);
+      if(filledY < parseInt(40*unitV)){
+        lC.fillStyle = "#00ff00";
+        filledY = filledY + 0.25;
+        //console.log(filledY,parseInt(90*unitV));
+        lC.fillRect(parseInt(45*unitH),parseInt(50*unitV),parseInt(20*unitH),filledY);
+      }else if (filledX < (100*unitH)) {
+        filledX = filledX + 1;
+        lC.fillRect(parseInt(45*unitH),parseInt(90*unitV),filledX,parseInt(20*unitH));
+      }else{
+        Draw();
+        SetState = 4;
+        filledX = 0;
+        filledY = 0;
+      }
+    }else if(SetState == 4){
+      if(filledX < parseInt(60*unitH)){
+        rC.fillStyle = "#00ff00";
+        filledX = filledX + 0.25;
+        //console.log(filledY,parseInt(70*unitV));
+        rC.fillRect(parseInt(0*unitH),parseInt(90*unitV),filledX,parseInt(20*unitH));
+      }else if (filledY < (20*unitV)) {
+        filledY = filledY + 0.25;
+        rC.fillRect(parseInt(45*unitH),parseInt(90*unitV),parseInt(20*unitH),-1*filledY);
+      }else{
+        DrawCircle(rC,parseInt(50*unitH),parseInt(70*unitV),parseInt(20*unitH),"#00ff00","#00ff00");
+        PreSetState = SetState;
+        generateError();
+        GlobalCounter = 0;
+        filledX = 0;
+        filledY = 0;
+        q9();
+
+      }
+    }else if(SetState == 5){
+      if(filledY < parseInt(40*unitV)){
+        rC.fillStyle = "#00ff00";
+        filledY = filledY + 0.25;
+        //console.log(filledY,parseInt(70*unitV));
+        rC.fillRect(parseInt(45*unitH),parseInt(70*unitV),parseInt(20*unitH),-1*filledY);
+      }else {
+        DrawCircle(rC,parseInt(50*unitH),parseInt(30*unitV),parseInt(20*unitH),"#00ff00","#00ff00");
+        PreSetState = SetState;
+        GlobalCounter = 0;
+        filledX = 0;
+        filledY = 0;
+        q10();
+      }
+    }else if(SetState == 6){
+      if(filledY < parseInt(40*unitV)){
+        rC.fillStyle = "#00ff00";
+        filledY = filledY + 0.25;
+        console.log(filledY,parseInt(40*unitV));
+        rC.fillRect(parseInt(45*unitH),parseInt(40*unitV),parseInt(20*unitH),-1*filledY);
+      }else {
+        Samapt();
+        PreSetState = SetState;
+      }
+    }
+
+  }
+  setTimeout(TrackProgress,1);
+}
+function main(){
+  addCheckPoints();
+  q1();
+  setTimeout(TrackProgress,20);
+}
+function clearData(id){
+  document.getElementById(id).value = "";
+}
+function TextBoxHandler(id,nextId){
+var check_input_data = 0;
+
+var e = document.getElementById(id);
+if(e.value > 1){
+  e.value = 0;
+  alert("Please enter valid binary number");
+  check_input_data = 1;
+  }
+  if((e.value == 1 || e.value == 0) && nextId != 'stop'&&nextId != 'stop1')
+  {
+    document.getElementById(nextId).focus();
+  }
+  if(nextId == 'stop'){
+    verify('',5);
+  }
+}
+function obtainTemplate(){
+  var temp = "";
+  for(var i=0; i<4;i++){
+    console.log(temp);
+    temp = temp + '<tr style="border:solid;">';
+    console.log(temp);
+    temp = temp + '<th style="border:solid;">'+ (i+0)+'</th><td style="border:solid;"><input '+`onkeyup="TextBoxHandler('butt0`+i+`','butt1`+(i)+`')" onfocus="clearData('butt0`+i+`')"`+' id="butt0' + i+'" style="width:31px;height:100%;" value="0"></td>';
+    temp = temp + '<td style="border:solid;"><input'+` onkeyup="TextBoxHandler('butt1`+i+`','butt2`+(i)+`')" onfocus="clearData('butt1`+i+`')"`+'  id="butt1' + i+'" style="width:31px;height:100%;" value="0"></td>';
+    temp = temp + '<td style="border:solid;">'+StoreOriginalBits[i][0] + '</td>';
+    temp = temp + '<td style="border:solid;"><input '+`onkeyup="TextBoxHandler('butt2`+i+`','stop1')" onfocus="clearData('butt2`+i+`')"`+' id="butt2' + i+'" style="width:31px;height:100%;" value="0"></td>';
+    temp = temp + '<td style="border:solid;">'+StoreOriginalBits[i][1] + '</td>';
+    temp = temp + '<td style="border:solid;">'+StoreOriginalBits[i][2] + '</td>';
+    temp = temp + '<td style="border:solid;">'+StoreOriginalBits[i][3] + '</td>';
+    temp = temp + '</tr>';
+  }
+  console.log(temp);
+  return temp;
+}
+function obtainParityVal(){
+  var temp = [];
+  temp.push([parseInt(document.getElementById('butt00').value),parseInt(document.getElementById('butt10').value),StoreOriginalBits[0][0],parseInt(document.getElementById('butt20').value),StoreOriginalBits[0][1],StoreOriginalBits[0][2],StoreOriginalBits[0][3]]);
+  temp.push([parseInt(document.getElementById('butt01').value),parseInt(document.getElementById('butt11').value),StoreOriginalBits[1][0],parseInt(document.getElementById('butt21').value),StoreOriginalBits[1][1],StoreOriginalBits[1][2],StoreOriginalBits[1][3]]);
+  temp.push([parseInt(document.getElementById('butt02').value),parseInt(document.getElementById('butt12').value),StoreOriginalBits[2][0],parseInt(document.getElementById('butt22').value),StoreOriginalBits[2][1],StoreOriginalBits[2][2],StoreOriginalBits[2][3]]);
+  temp.push([parseInt(document.getElementById('butt03').value),parseInt(document.getElementById('butt13').value),StoreOriginalBits[3][0],parseInt(document.getElementById('butt23').value),StoreOriginalBits[3][1],StoreOriginalBits[3][2],StoreOriginalBits[3][3]]);
+  StoreOriginalBits = temp;
+  return temp.toString();
+}
+function obtainCorrect(){
+var temp = [];
+var p1;
+var p2
+var p3;
+for(var i = 0;i<4;i++){
+  p1 = StoreOriginalBits[i][0] + StoreOriginalBits[i][1] + StoreOriginalBits[i][3];
+  p2 = StoreOriginalBits[i][0] + StoreOriginalBits[i][2]   + StoreOriginalBits[i][3];
+  p3 = StoreOriginalBits[i][1] + StoreOriginalBits[i][2]   + StoreOriginalBits[i][3];
+  p1 = p1%2;p2 = p2%2 ;p3=p3%2;
+  temp.push([p1,p2,StoreOriginalBits[i][0],p3,StoreOriginalBits[i][1],StoreOriginalBits[i][2],StoreOriginalBits[i][3]]);
+}
+return temp.toString();
+}
+function generateError(){
+  var waitlist = [0,1,1,2];
+  //onebit error
+  for(var j = 0;j<4;j++){
+  StoreErroredBits.push([StoreOriginalBits[j][0],StoreOriginalBits[j][1],StoreOriginalBits[j][2],StoreOriginalBits[j][3],StoreOriginalBits[j][4],StoreOriginalBits[j][5],StoreOriginalBits[j][6]]);
+  }
+  var prevIndex = 0;
+  for(var i = 0;i<4;i++){
+      var err = parseInt(Math.random()*(4-i));
+
+
+      console.log(err,waitlist);
+      for(var k = 0;k<err;k++){
+
+        var index = parseInt(Math.random()*(6));
+
+        console.log("Changing bit:"+index);
+        if(StoreErroredBits[i][index] == 1){
+          StoreErroredBits[i][index] = 0;
+        }else{
+          StoreErroredBits[i][index] = 1;
+        }
+      }
+      waitlist.splice(err,1);
+  }
+}
+function CalculateError(ind){
+var count = 0;
+
+for(var i = 0; i<6;i++){
+  if(StoreErroredBits[ind][i] != StoreOriginalBits[ind][i]){
+    count = count +1;
+  }
+
+}
+if(count >1){
+  count = 2;
+}
+return count;
+}
+var phase = 0;
+function Draw(){
+  bC.fillStyle = "#00ffff";
+  bC.fillRect(0,0,100*unitV,100*unitH);
+  bC.fillStyle = "#00ffff";
+  for(var t = 0;t<100;t = t + (1/100)){
+
+  bC.fillRect(t,(3*Math.sin((1*t) - phase))+3,0.25,0.25);
+  bC.fillStyle = "#000000";
+  }
+  phase++;
+  setTimeout(Draw,200);
+}
+main();
+</script>
+
+
+</html>

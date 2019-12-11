@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta charset="utf-8" />
+    <title>Html file first</title>
+    <font size = "15"></font>
+    <font face = "Comic sans MS"></font>
+    <style>
+    h1 {
+      position: absolute;
+      left:100px;
+      top:100px;
+    }
+    div  {
+      position: absolute;
+      left:0px;
+      top:0px;
+    }
+    </style>
+    </head>
+    <body>
+    <canvas id = "canvas" style="z-index:0px;" width="1000px" height = "800px">
+    </canvas>
+    <div id = "buttonHolder" style="border:solid;border-color:#0000ff;border-width:0px;width:138px;height:45px;">
+    <input type="text" onkeyup="TextBoxHandler('t1','t2')" onfocus="clearData('t1')" id="t1" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:0px;border:solid" /><!--left:238px;top:325px;-->
+    <input type="text" onkeyup="TextBoxHandler('t2','t3')" onfocus="clearData('t2')" id="t2" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:34px;border:solid" />
+    <input type="text" onkeyup="TextBoxHandler('t3','t4')" onfocus="clearData('t3')" id="t3" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:68px;border:solid" />
+    <input type="text" onkeyup="TextBoxHandler('t4','stop')" onfocus="clearData('t4')" id="t4" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:102px;border:solid" />
+    </div>
+
+    <div id = "buttonHolder2" style="display: none;border:solid;border-color:#0000ff;border-width:0px;width:257px;height:45px;">
+<input type="button" onClick="parity(0)" value="_" id="a1" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:0px;border:solid">
+    <input type="button" onClick="parity(1)" value="_"  id="a2" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:32px;border:solid" /><!--left:238px;top:325px;-->
+<input type="button" onClick="parity(2)" value="_" id="a3" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:64px;border:solid">
+    <input type="button" onClick="parity(3)" value="_"  id="a4" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:96px;border:solid" />
+<input type="button" onClick="parity(4)" value="_" id="a5" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:128px;border:solid">
+    <input type="button" onClick="parity(5)" value="_"  id="a6" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:160px;border:solid" />
+<input type="button" onClick="parity(6)" value="_" id="a7" style="z-index:101;position:absolute;width:31px;height:35px;font-size:25px;left:192px;border:solid">
+    </div>
+    <div id="dialogue" style="z-index:20px;top:100px;left:230px;height:640px;width:430px;border:solid;border-color:#0000ff;border-width:0px;display:none;">
+      <div id="QuestionHolder" style="z-index: 30px;top:0px;left:0px;height:229px;width:424px;border:solid;border-color:#ff0000;border-width:0px;background-image:url(dialogue_box.png);background-size:435px 240px;padding-top:9px;padding-left:11px;">
+        <!--<input type='text' value='0' id="tb" style="display:None">-->
+      </div>
+      <div id="optionHolder" style="z-index: 40;top:230px;padding-top:20px;"><input id='tb' style="display:None" type='text' value='0'><input type="button" id="next" value="next" onClick="q1Evaluate()"></div>
+    </div>
+    <img src = "computer.png" style="position:absolute;z-index:101;position:absolute;left:28px;top:28px" id="computer"/>
+    <img src = "computer.png" style="position:absolute;z-index:101;position:absolute;left:670px;top:28px" id="computer1"/>
+    <!--<img src = "dialogue_box.png" style="z-index:101;position:absolute;left:230px;top:160px" id="dialogue"/>-->
+    <div id="demo1"  style="border:solid;color:red;width:900px;height:850px"></div>
+
+    <script>
+    var canvas = document.getElementById("canvas");
+    var c = canvas.getContext("2d");
+    var bHolder = document.getElementById("buttonHolder");
+    main();
+    var i = 0;
+    var check_move=1;
+    var onHold = 0;
+    function hideButtons(){
+      bHolder.style.display = "None";
+    }
+    hideButtons();
+    function mouseOver() {
+
+    }
+    function mouseOut() {
+
+    }
+    function clearData(id){
+      document.getElementById(id).value = "";
+    }
+    function main()
+    {
+      document.getElementById("computer").style.display = "block";
+      document.getElementById("computer1").style.display = "block";
+      c.beginPath();
+      c.moveTo(116,203);
+      c.lineTo(116,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.stroke();
+      c.beginPath();
+      c.moveTo(762,203);
+      c.lineTo(762,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.moveTo(116,700);
+      c.lineTo(762,700);
+      c.lineWidth="4";
+      c.strokeStyle = "red";
+      c.stroke();
+      c.beginPath();
+      c.arc(116,253,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(116,383,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(762,253,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      c.beginPath();
+      c.arc(762,383,10,0,2*Math.PI,true);
+      c.fill();
+      c.strokeStyle = "red";
+      c.fillStyle = "yellow";
+      c.fill();
+      c.stroke();
+      animate_ball(203,116);
+    }
+    function TextBoxHandler(id,nextId){
+    var check_input_data = 0;
+
+    var e = document.getElementById(id);
+    if(e.value > 1){
+      e.value = 0;
+      alert("Please enter valid binary number");
+      check_input_data = 1;
+      }
+      if((e.value == 1 || e.value == 0) && nextId != 'stop')
+      {
+        document.getElementById(nextId).focus();
+      }
+    }
+    /*function images_dialogue_open()
+    {
+      document.getElementById("dialogue").style.display = "block";
+    }
+    function images_dialogue_close()
+    {
+      document.getElementById("dialogue").style.display = "none";
+    }*/
+    function input_data_student(event)
+    {
+      var x = event.clientX;
+      var y = event.clientY;
+      var cor = "X-cords" + x + "Y-cords" + y ;
+      document.getElementById("demo1").innerHTML = cor;
+      hide_text_box();
+      var first = parseInt(document.getElementById('t1').value);
+      var second = parseInt(document.getElementById('t2').value);
+      var third = parseInt(document.getElementById('t3').value);
+      var fourth = parseInt(document.getElementById('t4').value);
+    }
+    /*function hide_text_box()
+    {
+      document.getElementById("t1").style.display = "none";
+      document.getElementById("t2").style.display = "none";
+      document.getElementById("t3").style.display = "none";
+      document.getElementById("t4").style.display = "none";
+    }*/
+
+    function animate_ball(move,move1)
+    {
+      //var move=223;
+        var popUp = document.getElementById("dialogue");
+      //for(move=223;move<=383;move++)
+      //{
+        //console.log(move1,move,check_move);
+        c.beginPath();
+        c.arc(move1,move,5,0,2*Math.PI,true);
+        c.fill();
+        c.strokeStyle = "black";
+        c.fillStyle = "green";
+        c.fill();
+        if(onHold == 0){
+        if(check_move == 4 || check_move == 5)
+        {
+          move1 += 5;
+        }else if(check_move == 6||check_move == 7){
+          move -= 5;
+        }
+        else if(check_move == 2 || check_move == 3|| check_move == 1){
+          move += 5;
+        }
+      }else{
+        //console.log("onHoldState");
+      }
+        setTimeout(function (){
+          //console.log(onHold,check_move);
+          console.log(check_move);
+          if(move <= 253 && check_move==1){
+            animate_ball(move,move1);
+            //images_dialogue_open();
+            if(move >= 253)
+            {
+              onHold = 1;
+              question1();
+
+              if(onHold == 0){
+                //check_move = 2;
+              }
+              }
+          }else if(move <= 390 && check_move==2){
+            animate_ball(move,move1);
+
+            if(move >= 380)
+            {
+
+              onHold = 1;
+              question2();
+              if(onHold == 0){
+                check_move=3;
+              }
+              //images_dialogue_close();
+            }else{
+              popUp.style.display="None";
+              //console.log("removed popUp");
+            }
+          }
+          else if(move <= 698 && check_move==3){
+            animate_ball(move,move1);
+            if(move >= 698)
+            {
+              onHold = 0;
+
+              if(onHold == 0){
+              check_move=4;
+            }
+            }
+          }
+          else if(move1 <= 446 && check_move==4){
+            animate_ball(move,move1);
+            if(move1 >= 446)
+            {
+              check_move=5;
+            }
+          }
+          else if(move1 <= 756 && check_move==5){
+            animate_ball(move,move1);
+            if(move1 >= 756){
+              onHold = 0;
+
+              if(onHold == 0){
+            check_move = 6;
+            }
+          }
+        }
+        else if(move>= 253 && check_move==6){
+            animate_ball(move,move1);
+            //check_move = 7;
+
+            if(move <= 253){
+              onHold = 1;
+              questionR1();
+              if(onHold == 0){
+            check_move = 7;
+          }
+            //console.log("Changed state",move,move1);
+          }
+        }else if(move >= 253 && check_move==7){
+              animate_ball(move,move1);
+              //check_move = 7;
+              if(move <= 253){
+              check_move = 8;
+
+              //console.log("Changed state",move,move1);
+            }
+          }else if(move >= 223 && check_move==8){
+                animate_ball(move,move1);
+                //check_move = 7;
+                if(move1 <= 223){
+                check_move = 9;
+                //console.log("Changed state",move,move1);
+              }}else{
+            animate_ball(move,move1);
+          }
+        },2);
+      //}
+    }
+  function question1(){
+    var popUp = document.getElementById("dialogue");
+    var question = document.getElementById("QuestionHolder");
+    var button = document.getElementById("buttonHolder");
+    var option = document.getElementById("optionHolder");
+    if(check ==0){
+    popUp.style.display="block";
+    question.innerHTML = question.innerHTML + "Enter the data to send in binary";
+    popUp.style.backgroundImage = "dialogue_box.png";
+    question.appendChild(button);
+    button.style.display = "block";
+    button.style.top = "60px";
+    button.style.left = "120px";
+}
+
+    }
+    var buttons = [];
+    buttons.push("t1");buttons.push("t2");buttons.push("t3");buttons.push("t4");
+    for(var j = 0;j< 4;j++){
+      buttons[j] = document.getElementById(buttons[j]);
+    }
+    function q1Evaluate(){
+      if(checkForParity == 1){
+        checkForParity();
+      }else{
+      if(check==3||check==2){
+        q2Evaluate();
+      }else{
+      var count = 0;
+      for(var i = 0;i<4;i++){
+        //console.log(buttons[i].value);
+        if(parseInt(buttons[i].value) == 0||parseInt(buttons[i].value) == 1){
+          count++;
+        }else{
+          count--;
+        }
+      }
+        if(count == 4){
+          onHold = 0;
+          check_move = 2;
+          check++;
+        }else{
+          alert("Bits not entered properly");
+        }
+      }
+    }
+    function q2Evaluate(){
+      if(4 <= (2**parseInt(document.getElementById("tb").value)-parseInt(document.getElementById("tb").value) - 1)){
+        paritybits = parseInt(document.getElementById("tb").value);
+        question3();
+
+      }else{
+        console.log(parseInt(document.getElementById("tb").value));
+        alert("d < 2^r -r-1");
+      }
+    }
+    }
+    var check = 0;
+    function question2(){
+      var popUp = document.getElementById("dialogue");
+      var question = document.getElementById("QuestionHolder");
+      var button = document.getElementById("buttonHolder");
+      var option = document.getElementById("optionHolder");
+      popUp.style.display="block";
+      if(check == 1){
+      question.innerHTML =  "Enter the number of redundant bits to be added:";
+      check = 2;
+      }
+      document.getElementById("tb").style.display ="block";
+      }
+    function question3(){
+        var popUp = document.getElementById("dialogue");
+        var question = document.getElementById("QuestionHolder");
+        var button = document.getElementById("buttonHolder2");
+        var option = document.getElementById("optionHolder");
+        question.innerHTML =  "Hover the mouse between the digits and click to select the position:";
+        document.getElementById("tb").style.display ="none";
+        button.style.display = "block";
+        button.width = "688px";
+        question.appendChild(button);
+        button.style.display = "block";
+        button.style.top = "60px";
+        button.style.left = "120px";
+        //for(var z = 0;z<4;z++){
+          //document.getElementById("a"+ (2*(z+1))).value = buttons[z].value;
+        //}
+      //  onHold = 0;
+        //check_move = 3;
+        //check = 4;
+      }
+      var paritybits = 0;
+      var togglemode= 0;
+      function parity(index){
+      if(togglemode ==0){
+        if(paritybits > 0){
+        document.getElementById("a"+(index+1)).setAttribute("type", "text");
+        document.getElementById("a"+(index+1)).value = "0";
+        paritybits--;
+        //togglemode = 1;
+      }else{
+        togglemode = 1;
+        modify();
+        //onHold = 0;
+         //check_move = 3;
+         //check = 4;
+       }
+     }
+      }
+var checkParity = 0;
+function modify(){
+  var index = 0;
+  for(var t = 1;t<8;t++){
+    if(document.getElementById("a" + t).type == "button"){
+      document.getElementById("a" + t).value = buttons[index].value;
+      index++;
+    }
+    checkParity = 1;
+    document.getElementById("next").onclick = checkForParity;
+  }
+
+  //document.getElementById("QuestionHolder").innerHTML = "Input the values of these parity bits.";
+  //document.getElementById("QuestionHolder").appendChild(document.getElementById("buttonHolder2"));
+}
+var CheckBits = [];
+var OriginalBits = [];
+function checkForParity(){
+  var p1 = parseInt(document.getElementById("a" + 3).value) + parseInt(document.getElementById("a" + 5).value) + parseInt(document.getElementById("a" + 7).value);
+  var p2 = parseInt(document.getElementById("a" + 3).value) + parseInt(document.getElementById("a" + 6).value)    + parseInt(document.getElementById("a" + 7).value);
+  var p3 = parseInt(document.getElementById("a" + 5).value) + parseInt(document.getElementById("a" + 6).value)    + parseInt(document.getElementById("a" + 7).value);
+  p1 = p1%2;p2 = p2%2 ;p3=p3%2;
+  console.log(p1,p2,p3);
+  for(var c = 0;c<7;c++){
+    CheckBits.push(parseInt(document.getElementById("a" + (c + 1)).value));
+    OriginalBits.push(CheckBits[c]);
+  }
+  if(p1 == document.getElementById("a" + 1).value && document.getElementById("a" + 2).value == p2 && document.getElementById("a" + 4).value == p3){
+    onHold = 0;
+     check_move = 3;
+     check = 4;
+  }else{
+    alert("check theory");
+  }
+}
+function questionR1(){
+  var popUp = document.getElementById("dialogue");
+  var question = document.getElementById("QuestionHolder");
+  var button = document.getElementById("buttonHolder2");
+  var option = document.getElementById("optionHolder");
+  var temp = "";
+  question.innerHTML =  "Does the following message contain any errors?<br>";
+  if(CheckBits[0] == "1"){
+    CheckBits[6] == 1;
+  }
+  for(var i = 0;i<7;i++){
+    temp = temp + CheckBits[i];
+  }
+  question.innerHTML = question.innerHTML + temp + "<br> Enter yes if error exists.";
+  document.getElementById("next").onclick = ErrorCheck;
+}
+function ErrorCheck(){
+  var e = 0;
+  for(var d = 0;d<7;d++){
+    if(CheckBits[d] != OriginalBits[d]){
+      e++;
+    }
+  }
+  console.log(ErrorCheck,CheckBits);
+ if(e<1 && document.getElementById("tb").value != "yes"){
+  endgame();
+}else if(e>0 && document.getElementById("tb").value == "yes"){
+ askCorrect();
+}else{
+  alert("Wrong Answer!");
+}
+
+}
+function askCorrect(){
+  var popUp = document.getElementById("dialogue");
+  var question = document.getElementById("QuestionHolder");
+  //var button = document.getElementById("buttonHolder2");
+  var option = document.getElementById("optionHolder");
+  question.innerHTML = "Enter the correct code Word in the textbox without spaces:";
+  document.getElementById("next").onclick = ErrorDetect;
+}
+function ErrorDetect(){
+  var count = 0;
+  for(var r = 0;r<7;r++){
+    if(document.getElementById("tb").value.indexOf(r) != OriginalBits[r]){
+      count ++;
+    }
+  }
+  if(count > 0){
+    alert("Wrong answer");
+  }else{
+    endgame();
+  }
+}
+function endgame(){
+  var popUp = document.getElementById("dialogue");
+  var question = document.getElementById("QuestionHolder");
+  //var button = document.getElementById("buttonHolder2");
+  var option = document.getElementById("optionHolder");
+  question.innerHTML = "What is the hamming distance for <br> 0110011<br> and 0111101?:";
+  document.getElementById("next").onclick = LastFunction;
+  //alert("Simulation Complete");
+}
+function LastFunction(){
+  if(document.getElementById("tb").value == 3){
+    alert("Simulation Complete");
+  }else{
+    alert("Wrong Answer");
+  }
+}
+
+
+    </script>
+  </body>
+  </html>

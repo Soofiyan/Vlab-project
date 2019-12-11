@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <img id = "back_img" src="ask_modulated_waveform.jpg" style="display:None;height:500px;width:990px;position:absolute;left:0px;top:100px">
+   <img id = "next" src="next_button.jpg" style="z-index: 101;height:70px;width:150px;position:absolute;left:1450px;top:950px">
+   <meta charset="utf-8" />
+   <title>ASK modulator</title>
+</head>
+<body>
+ <p id="th3" style="font-family:Impact,Charcoal,sans-serif;font-size:50px;z-index:101;position:absolute;left:0px;top:0px;display:none"><font color=#00>Theory of ASK Modulator</font></p>
+ <p id="th2" style="font-family:Impact,Charcoal,sans-serif;font-size:200px;z-index:101;position:absolute;left:0px;top:505px;display:none"><font color=#DBDBDB>ASK Modulator</font></p>
+ <p id="th1" style="font-family:georgia,garamond,serif;font-size: 25px;z-index:101;position:absolute;left:0px;top:580px;display:none"><font color="blue">
+ <font color="dark-red">Amplitude-shift keying (ASK) is a form of amplitude modulation that represents digital data as variations in the amplitude of a carrier wave.</font> In an ASK system,
+ the binary symbol 1 is represented by transmitting a fixed-amplitude carrier wave and fixed frequency for a bit duration of T seconds. If the signal value is 1 then the carrier signal will
+ be transmitted; otherwise, a signal value of 0 will be transmitted. Any digital modulation scheme uses a finite number of distinct signals to represent digital data.
+ <br>ASK uses a finite number of amplitudes, each assigned a unique pattern of binary digits. Usually, each amplitude encodes an equal number of bits. Each pattern of bits forms the symbol
+ that is represented by the particular amplitude. The demodulator, which is designed specifically for the symbol-set used by the modulator, determines the amplitude of the received signal
+ and maps it back to the symbol it represents, thus recovering the original data. Frequency and phase of the carrier are kept constant.
+ <br>Like AM, an ASK is also linear and sensitive to atmospheric noise, distortions, propagation conditions on different routes in PSTN, etc. Both ASK modulation and demodulation processes
+ are relatively inexpensive. The ASK technique is also commonly used to transmit digital data over optical fiber. For LED transmitters, binary 1 is represented by a short pulse of light and
+ binary 0 by the absence of light. Laser transmitters normally have a fixed "bias" current that causes the device to emit a low light level.
+ This low level represents binary 0, while a higher-amplitude lightwave represents binary 1.
+ </font></p>
+ <p id="comp_head1" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1346px;top:0px;display:none"><font color = 0xAAFFBB>Resistor</font></p>
+ <p id="comp_head2" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1346px;top:160px;display:none"><font color = 0xAAFFBB>IC LF 398</font></p>
+ <p id="comp_canvas2" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:575px;top:340px;display:none"><font color = 0x000000>IC LF 398</font></p>
+ <p id="comp_head3" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1516px;top:0px;display:none"><font color = 0xAAFFBB>Erase</font></p>
+ <p id="comp_head4" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1516px;top:160px;display:none"><font color = 0xAAFFBB>Modulating signal</font></p>
+ <p id="comp_head5" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1346px;top:320px;display:none"><font color = 0xAAFFBB>Carrier Signal</font></p>
+ <p id="comp_head6" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1346px;top:480px;display:none"><font color = 0xAAFFBB>+Vcc</font></p>
+ <p id="comp_head7" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1516px;top:320px;display:none"><font color = 0xAAFFBB>Ground</font></p>
+ <p id="comp_head8" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1516px;top:480px;display:none"><font color = 0xAAFFBB>-Vee</font></p>
+ <p id="comp_head9" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1346px;top:640px;display:none"><font color = 0xAAFFBB>Variable Resistor</font></p>
+ <p id="comp_head10" style="font-family:Impact,Charcoal,sans-serif;font-size:20px;position:absolute;left:1516px;top:640px;display:none"><font color = 0xAAFFBB>ASK output</font></p>
+ <canvas id = "canvas" width="1300" height = "800" style="border:10px groove grey;position:absolute;display:None" ></canvas>
+ <canvas id = "canvas1" width="327" height = "800" style="border:10px groove grey;position:absolute;display:None;left:1330px" ></canvas>
+ <div onmousemove="mouse_coord(event)" onmousedown="mouse_down(event)" onmouseup="mouse_up(event)" style="z-index:101;position:absolute;width:1678px;height:950px;top:0px;left:0px;position:absolute"></div>
+ <p id="demo" style = "font-size:20px;position:absolute;top:0px;left:10px;top:900px"></p>
+<script>
+var start_x = 0;
+var start_y = 0;
+var end_x = 0;
+var end_y = 0;
+var mouse_down_line = 0;
+var mouse_down_resis = 0;
+var x;
+var y;
+var prev_x;
+var prev_y;
+var array_line_x = [];
+var array_line_y = [];
+var array_resis_x = [];
+var array_resis_y = [];
+var resis_count = 0;
+var line_count = 0;
+var resis_start_x = 0;
+var resis_start_y = 0;
+var rect_count = 0;
+var rect_start_x = 0;
+var rect_start_y = 0;
+var rect_end_x = 0;
+var rect_end_y = 0;
+var grid_inter_x = [];
+var grid_inter_y = [];
+var x_div;
+var x_rem;
+var rect_clear = 0;
+var rect_clear_array = [];
+var move_mouse = 0;
+
+second_page();
+function first_page()
+{
+ document.getElementById("th3").style.display = "block";
+ document.getElementById("th2").style.display = "block";
+ document.getElementById("th1").style.display = "block";
+ document.getElementById("back_img").style.display = "block";
+}
+function second_page()
+{
+ move_mouse = 1;
+ document.getElementById("next").style.top = "870px";
+ document.getElementById("comp_head1").style.display = "block";
+ document.getElementById("comp_head2").style.display = "block";
+ document.getElementById("comp_head3").style.display = "block";
+ document.getElementById("comp_head4").style.display = "block";
+ document.getElementById("comp_head5").style.display = "block";
+ document.getElementById("comp_head6").style.display = "block";
+ document.getElementById("comp_head7").style.display = "block";
+ document.getElementById("comp_head8").style.display = "block";
+ document.getElementById("comp_head9").style.display = "block";
+ document.getElementById("comp_head10").style.display = "block";
+ document.getElementById("comp_canvas2").style.display = "block";
+ draw_grid();
+ grid_intersection();
+}
+function draw_grid()
+{
+ document.getElementById("canvas").style.display = "block";
+ var canvas = document.getElementById("canvas");
+ var c = canvas.getContext("2d");
+ document.getElementById("canvas1").style.display = "block";
+ var canvas1 = document.getElementById("canvas1");
+ var c1 = canvas1.getContext("2d");
+ for(var i = 50; i<= 800;i=i+50)
+ {
+   c.beginPath();
+   c.moveTo(0,i);
+   c.lineTo(1300,i);
+   c.lineWidth="0.2";
+   c.strokeStyle = 0xEEEEEE;
+   c.stroke();
+ }
+ for(var i = 50; i<= 1300;i=i+50)
+ {
+   c.beginPath();
+   c.moveTo(i,0);
+   c.lineTo(i,1300);
+   c.lineWidth="0.2";
+   c.strokeStyle = "#0xEEEEEE";
+   c.stroke();
+ }
+ c1.beginPath();
+ c1.moveTo(170,0);
+ c1.lineTo(170,806);
+ c1.lineWidth="1";
+ c1.strokeStyle = "#0x403F43";
+ c1.stroke();
+ for(var i = 160; i<= 800;i=i+160)
+ {
+   c1.beginPath();
+   c1.moveTo(0,i);
+   c1.lineTo(800,i);
+   c1.lineWidth="1";
+   c1.strokeStyle = "#0x403F43";
+   c1.stroke();
+ }
+ IC_LF_398();
+}
+function grid_intersection()
+{
+ for(var i = 0; i<=25; i=i+1)
+ {
+     grid_inter_x[i] = 67 + (i*50);
+ }
+ for(var j = 0; j<=15; j=j+1)
+ {
+     grid_inter_y[j] = 67 + (j*50);
+ }
+}
+function co_ord_update()
+{
+ x_div = parseInt(start_x/50);
+ x_rem = parseInt(start_x%50);
+ if(x_rem > 25)
+ {
+   start_x = start_x + 50 - x_rem;
+ }
+ else {
+   start_x = start_x - x_rem;
+ }
+ x_div = parseInt(start_y/50);
+ x_rem = parseInt(start_y%50);
+ if(x_rem > 25)
+ {
+   start_y = start_y + 50 - x_rem;
+ }
+ else {
+   start_y = start_y - x_rem;
+ }
+ x_div = parseInt(x/50);
+ x_rem = parseInt(x%50);
+ if(x_rem > 25)
+ {
+   x = x + 50 - x_rem;
+ }
+ else {
+   x = x - x_rem;
+ }
+ x_div = parseInt(y/50);
+ x_rem = parseInt(y%50);
+ if(x_rem > 25)
+ {
+   y = y + 50 - x_rem;
+ }
+ else {
+   y = y - x_rem;
+ }
+}
+function mouse_down(event)
+{
+ start_x = event.clientX;
+ start_y = event.clientY;
+ start_x = start_x - 17;
+ start_y = start_y - 17;
+ prev_x = x;
+ prev_y = y;
+ if(rect_clear == 1)
+ {
+   rect_clear = rect_clear + 1;
+   rect_clear_array[0] = start_x;
+   rect_clear_array[1] = start_y;
+ }
+ else if(start_x >= 1325 && start_x <= 1490)
+ {
+   if(start_y >= 3 && start_y <= 158)
+   {
+     mouse_down_resis = 1;
+     mouse_down_line = 0;
+   }
+   else {
+     mouse_down_resis = 0;
+     mouse_down_line = 1;
+   }
+ }
+ else if(start_x >= 1495 && start_x <= 1650) {
+   if(start_y >= 3 && start_y <= 158)
+   {
+     rect_clear = rect_clear + 1;
+     mouse_down_resis = 0;
+     mouse_down_line = 0;
+   }
+   else {
+     mouse_down_resis = 0;
+     mouse_down_line = 1;
+     rect_clear = 0;
+   }
+ }
+ else if(start_x >= 1495 && start_x <= 1650) {
+   if(start_y >= 3 && start_y <= 158)
+   {
+     rect_clear = rect_clear + 1;
+     mouse_down_resis = 0;
+     mouse_down_line = 0;
+   }
+   else {
+     mouse_down_resis = 0;
+     mouse_down_line = 1;
+     rect_clear = 0;
+   }
+ }
+ else
+ {
+   mouse_down_resis = 0;
+   mouse_down_line = 1;
+   rect_clear = 0;
+ }
+}
+function mouse_up(event)
+{
+ end_x = event.clientX;
+ end_y = event.clientY;
+ end_x = end_x - 17;
+ end_y = end_y - 17;
+ var canvas = document.getElementById("canvas");
+ var c = canvas.getContext("2d");
+ if(rect_clear == 2)
+ {
+   rect_clear = 0;
+   rect_clear_array[2] = end_x;
+   rect_clear_array[3] = end_y;
+   rect_clear1();
+ }
+ if(mouse_down_resis == 1)
+ {
+   co_ord_update();
+   resis_count = resis_count + 1;
+   array_resis_x[resis_count] = x;
+   array_resis_y[resis_count] = y;
+   resistor(x,y);
+ }
+ if(mouse_down_line == 1)
+ {
+   co_ord_update();
+   line_count = line_count + 1;
+   array_line_x[line_count] = start_x;
+   array_line_y[line_count] = start_y;
+   line_count = line_count + 1;
+   array_line_x[line_count] = x;
+   array_line_y[line_count] = y;
+ }
+ c.beginPath();
+ c.clearRect(0,0,1300,1300);
+ c.stroke();
+ draw_grid();
+ for(var i = 1; i<= line_count;i=i+2)
+ {
+   document.getElementById("canvas").style.display = "block";
+   var canvas = document.getElementById("canvas");
+   var c = canvas.getContext("2d");
+   if(array_line_x[i] != -1 && array_line_y[i] != -1 && array_line_x[i+1] != -1 && array_line_y[i+1] != -1)
+   {
+     c.beginPath();
+     c.moveTo(array_line_x[i],array_line_y[i]);
+     c.lineTo(array_line_x[i+1],array_line_y[i+1]);
+     c.lineWidth="1.2";
+     c.strokeStyle = "#0x111111";
+     c.stroke();
+     c.closePath();
+   }
+ }
+ for(var i = 1; i<= resis_count;i=i+1)
+ {
+     resistor(array_resis_x[i],array_resis_y[i]);
+ }
+ mouse_down_line = 0;
+ mouse_down_resis = 0;
+}
+function IC_LF_398()
+{
+ var canvas = document.getElementById("canvas");
+ var c = canvas.getContext("2d");
+ c.beginPath();
+ c.arc(400,350,10,3/2,3*Math.PI/2,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.rect(400,300,400,100);
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.stroke();
+ c.beginPath();
+ c.lineTo(450,300);
+ c.lineTo(450,250);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(450,250,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.lineTo(550,300);
+ c.lineTo(550,250);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(550,250,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.lineTo(650,300);
+ c.lineTo(650,250);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(650,250,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.lineTo(750,300);
+ c.lineTo(750,250);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(750,250,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.lineTo(450,400);
+ c.lineTo(450,450);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(450,450,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.lineTo(550,400);
+ c.lineTo(550,450);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(550,450,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.lineTo(650,400);
+ c.lineTo(650,450);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(650,450,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.lineTo(750,400);
+ c.lineTo(750,450);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(750,450,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+}
+
+function mod_sig(mod_start_x, mod_start_y)
+{
+  var canvas = document.getElementById("canvas");
+  var c = canvas.getContext("2d");
+  c.beginPath();
+  c.arc(mod_start_x,mod_start_y,4,0,2*Math.PI,true);
+  c.fillStyle = "white";
+  c.strokeStyle = "black";
+  c.lineWidth = "2"
+  c.fill();
+  c.stroke();
+}
+
+function resistor(resis_start_x, resis_start_y)
+{
+ var canvas = document.getElementById("canvas");
+ var c = canvas.getContext("2d");
+ c.beginPath();
+ c.arc(resis_start_x,resis_start_y,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+ c.beginPath();
+ c.moveTo(resis_start_x+3,resis_start_y);
+ c.lineTo(resis_start_x+15,resis_start_y);
+ c.lineWidth="2";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.lineTo(resis_start_x+15,resis_start_y);
+ c.lineTo(resis_start_x+23,resis_start_y-10);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ for(var i = 0; i<= 40; i+= 8)
+ {
+   c.beginPath();
+   c.moveTo(resis_start_x+23+i,resis_start_y-10);
+   c.lineTo(resis_start_x+31+i,resis_start_y+10);
+   c.lineWidth="1.5";
+   c.strokeStyle = "#0xEEEEEE";
+   c.stroke();
+   i = i+8;
+   c.beginPath();
+   c.moveTo(resis_start_x+23+i,resis_start_y+10);
+   c.lineTo(resis_start_x+31+i,resis_start_y-10);
+   c.lineWidth="1.5";
+   c.strokeStyle = "#0xEEEEEE";
+   c.stroke();
+ }
+ c.beginPath();
+ c.moveTo(resis_start_x+23+48,resis_start_y-10);
+ c.lineTo(resis_start_x+31+48,resis_start_y+10);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.moveTo(resis_start_x+23+56,resis_start_y+10);
+ c.lineTo(resis_start_x+31+56,resis_start_y);
+ c.lineWidth="1.5";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.moveTo(resis_start_x+23+64,resis_start_y);
+ c.lineTo(resis_start_x+31+65,resis_start_y);
+ c.lineWidth="2";
+ c.strokeStyle = "#0xEEEEEE";
+ c.stroke();
+ c.beginPath();
+ c.arc(resis_start_x+100,resis_start_y,4,0,2*Math.PI,true);
+ c.fillStyle = "white";
+ c.strokeStyle = "black";
+ c.lineWidth = "2"
+ c.fill();
+ c.stroke();
+}
+function rect_clear1()
+{
+ for(var i = 1; i<=line_count ; i=i+2)
+ {
+   if(array_line_x[i] <= array_line_x[i+1] && array_line_y[i] <= array_line_y[i+1])
+   {
+     if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i] && rect_clear_array[1] <= array_line_y[i] && rect_clear_array[2] >= array_line_x[i+1] && rect_clear_array[3] >= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i+1] && rect_clear_array[1] >= array_line_y[i+1] && rect_clear_array[2] <= array_line_x[i] && rect_clear_array[3] <= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i] && rect_clear_array[1] >= array_line_y[i] && rect_clear_array[2] >= array_line_x[i+1] && rect_clear_array[3] <= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i+1] && rect_clear_array[1] >= array_line_y[i+1] && rect_clear_array[2] <= array_line_x[i] && rect_clear_array[3] <= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+   }
+   else if(array_line_x[i] >= array_line_x[i+1] && array_line_y[i] <= array_line_y[i+1])
+   {
+     if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i+1] && rect_clear_array[1] <= array_line_y[i] && rect_clear_array[2] >= array_line_x[i] && rect_clear_array[3] >= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i] && rect_clear_array[1] <= array_line_y[i] && rect_clear_array[2] <= array_line_x[i+1] && rect_clear_array[3]>= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i] && rect_clear_array[1] >= array_line_y[i] && rect_clear_array[2] >= array_line_x[i+1] && rect_clear_array[3] <= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i] && rect_clear_array[1] >= array_line_y[i+1] && rect_clear_array[2] <= array_line_x[i+1] && rect_clear_array[3] <= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+   }
+   else if(array_line_x[i] <= array_line_x[i+1] && array_line_y[i] >= array_line_y[i+1])
+   {
+     if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i] && rect_clear_array[1] <= array_line_y[i+1] && rect_clear_array[2] >= array_line_x[i+1] && rect_clear_array[3] >= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i+1] && rect_clear_array[1] <= array_line_y[i+1] && rect_clear_array[2] <= array_line_x[i] && rect_clear_array[3] >= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i] && rect_clear_array[1] >= array_line_y[i] && rect_clear_array[2] >= array_line_x[i+1] && rect_clear_array[3] <= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i+1] && rect_clear_array[1] >= array_line_y[i] && rect_clear_array[2] <= array_line_x[i] && rect_clear_array[3] <= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+   }
+   else if(array_line_x[i] >= array_line_x[i+1] && array_line_y[i] >= array_line_y[i+1])
+   {
+     if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i+1] && rect_clear_array[1] <= array_line_y[i+1] && rect_clear_array[2] >= array_line_x[i] && rect_clear_array[3] >= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] < rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i] && rect_clear_array[1] <= array_line_y[i+1] && rect_clear_array[2] <= array_line_x[i+1] && rect_clear_array[3] >= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] < rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] <= array_line_x[i+1] && rect_clear_array[1] >= array_line_y[i] && rect_clear_array[2] >= array_line_x[i] && rect_clear_array[3] <= array_line_y[i])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+     else if(rect_clear_array[0] > rect_clear_array[2] && rect_clear_array[1] > rect_clear_array[3])
+     {
+       if(rect_clear_array[0] >= array_line_x[i] && rect_clear_array[1] >= array_line_y[i] && rect_clear_array[2] <= array_line_x[i+1] && rect_clear_array[3] <= array_line_y[i+1])
+       {
+         array_line_x[i] = -1;
+         array_line_y[i] = -1;
+         array_line_x[i+1] = -1;
+         array_line_y[i+1] = -1;
+       }
+     }
+   }
+ }
+}
+function mouse_coord(event)
+{
+  if(move_mouse == 1)
+  {
+   x = event.clientX;
+   y = event.clientY;
+   x = x - 17;
+   y = y - 17;
+   var coor = "X coords: " + x + ", Y coords: " + y;
+   document.getElementById("demo").innerHTML = coor;
+   var canvas = document.getElementById("canvas");
+   var c = canvas.getContext("2d");
+     c.beginPath();
+     c.clearRect(0,0,1300,1300);
+     c.stroke();
+     draw_grid();
+     c.setLineDash([1.2,0]);
+   if(mouse_down_line == 1)
+   {
+     co_ord_update();
+     c.beginPath();
+     c.moveTo(start_x,start_y);
+     c.lineTo(x,y);
+     c.lineWidth="1.2";
+     c.strokeStyle = "#0x111111";
+     c.stroke();
+   }
+   if(mouse_down_resis == 1)
+   {
+     co_ord_update();
+     resistor(x,y);
+   }
+   if(rect_clear == 2)
+   {
+     c.beginPath();
+     c.lineWidth = "0.5";
+     c.strokeStyle = "#0x111111";
+     c.setLineDash([10,5]);
+     c.moveTo(rect_clear_array[0],rect_clear_array[1]);
+     c.lineTo(rect_clear_array[0],y);
+     c.moveTo(rect_clear_array[0],rect_clear_array[1]);
+     c.lineTo(x,rect_clear_array[1]);
+     c.moveTo(rect_clear_array[0],y);
+     c.lineTo(x,y);
+     c.moveTo(x,rect_clear_array[1]);
+     c.lineTo(x,y);
+     c.stroke();
+     c.setLineDash([0,0]);
+   }
+   for(var i = 1; i<= line_count;i=i+2)
+   {
+     document.getElementById("canvas").style.display = "block";
+     var canvas = document.getElementById("canvas");
+     var c = canvas.getContext("2d");
+     if(array_line_x[i] != -1 && array_line_y[i] != -1 && array_line_x[i+1] != -1 && array_line_y[i+1] != -1)
+     {
+       c.beginPath();
+       c.moveTo(array_line_x[i],array_line_y[i]);
+       c.lineTo(array_line_x[i+1],array_line_y[i+1]);
+       c.lineWidth="1.2";
+       c.strokeStyle = "#0x111111";
+       c.stroke();
+       c.closePath();
+     }
+   }
+   for(var i = 1; i<= resis_count;i=i+1)
+   {
+       resistor(array_resis_x[i],array_resis_y[i]);
+   }
+   prev_x = x;
+   prev_y = y;
+ }
+}
+</script>
+</body>
+</html>
